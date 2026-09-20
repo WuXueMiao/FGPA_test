@@ -1,4 +1,4 @@
-module sobel_stream_top_v2 #(
+module sobel_stream_top #(
     parameter IMG_WIDTH = 640,
     parameter X_WIDTH   = 11,
     parameter Y_WIDTH   = 11

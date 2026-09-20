@@ -1,9 +1,8 @@
-//window_3x3_v2相比于v1的核心变化：
 //用 eol 判断换行，不再依赖固定图像宽度去数列；
 //用 sof 判断新帧开始，避免两帧之间的数据混在一起；
 //输出 center_x / center_y，明确 Sobel 输出属于原图的中心像素 (x−1, y−1)
 
-module window_3x3_v2 #(
+module window_3x3 #(
     parameter IMG_WIDTH = 640,  // 实际图像每行最大像素数；当前先按 640 设计
     parameter X_WIDTH   = 11,   // 640 需要 10 位，留 11 位更方便
     parameter Y_WIDTH   = 11

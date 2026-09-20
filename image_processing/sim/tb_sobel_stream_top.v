@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module tb_sobel_stream_top_v2;
+module tb_sobel_stream_top;
 
     reg clk;
     reg rst_n;
@@ -20,7 +20,7 @@ module tb_sobel_stream_top_v2;
     integer edge_count;
     integer nonedge_count;
 
-    sobel_stream_top_v2 #(
+    sobel_stream_top #(
         .IMG_WIDTH(5),
         .X_WIDTH(11),
         .Y_WIDTH(11)
