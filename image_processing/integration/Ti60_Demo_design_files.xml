@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<efx:design_info xmlns:efx="http://www.efinixinc.com/enf_proj">
+    <efx:design_file name="src/sobel/dvp_rgb565_to_gray.v" version="default" library="default"/>
+    <efx:design_file name="src/sobel/window_3_3.v" version="default" library="default"/>
+    <efx:design_file name="src/sobel/sobel_core.v" version="default" library="default"/>
+    <efx:design_file name="src/sobel/sobel_stream_top.v" version="default" library="default"/>
+    <efx:design_file name="src/sobel/camera_sobel_top.v" version="default" library="default"/>
+</efx:design_info>

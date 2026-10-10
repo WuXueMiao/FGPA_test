@@ -55,7 +55,7 @@ module dvp_rgb565_to_gray (
             sof         <= 1'b0;
             eol         <= 1'b0;
 
-            // 检测新帧。当前配置中 VSYNC 高电平表示有效帧区域。
+            // VSYNC 上升沿标记新帧；数据接收仅由 HREF 门控。
             vsync_d <= vsync;
             if (vsync && !vsync_d)
                 frame_pending <= 1'b1;

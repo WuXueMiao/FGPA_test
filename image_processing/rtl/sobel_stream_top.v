@@ -13,6 +13,7 @@ module sobel_stream_top #(
 
     input      [10:0]       threshold,
 
+    output     [7:0]        edge_gray,
     output     [7:0]        edge_out,
     output                  edge_valid,
     output     [X_WIDTH-1:0] edge_x,
@@ -28,7 +29,7 @@ module sobel_stream_top #(
     wire [Y_WIDTH-1:0] center_y;
 
     // 像素流 → 3×3 窗口
-    window_3x3_v2 #(
+    window_3x3 #(
         .IMG_WIDTH(IMG_WIDTH),
         .X_WIDTH(X_WIDTH),
         .Y_WIDTH(Y_WIDTH)
@@ -57,6 +58,7 @@ module sobel_stream_top #(
         .p20(p20), .p21(p21), .p22(p22),
 
         .threshold(threshold),
+        .edge_gray(edge_gray),
         .edge_out(edge_out)
     );
 

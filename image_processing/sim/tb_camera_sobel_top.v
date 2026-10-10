@@ -9,6 +9,7 @@ module tb_camera_sobel_top;
     reg [7:0]  cmos_data;
     reg [10:0] threshold;
 
+    wire [7:0]  edge_gray;
     wire [7:0]  edge_out;
     wire        edge_valid;
     wire [10:0] edge_x;
@@ -29,6 +30,7 @@ module tb_camera_sobel_top;
         .cmos_data (cmos_data),
         .threshold (threshold),
 
+        .edge_gray  (edge_gray),
         .edge_out   (edge_out),
         .edge_valid (edge_valid),
         .edge_x     (edge_x),
@@ -79,7 +81,13 @@ module tb_camera_sobel_top;
     endtask
 
     always @(posedge pclk) begin
+        #1;
         if (edge_valid) begin
+            if (result_count >= 18 ||
+                edge_x !== ((result_count % 3) + 1) ||
+                edge_y !== (((result_count % 9) / 3) + 1) ||
+                edge_out !== ((result_count < 9 && result_count % 3 < 2) ? 8'd255 : 8'd0))
+                $fatal(1, "Camera Sobel pixel/coordinate mismatch at %0d", result_count);
             result_count = result_count + 1;
 
             if (edge_out != 0)
@@ -140,6 +148,9 @@ module tb_camera_sobel_top;
         $display("非边缘区域：%0d，预期为 12", result_count - edge_count);
         $display("--------------------------------");
 
+        if (result_count != 18 || edge_count != 6)
+            $fatal(1, "Camera Sobel output count mismatch");
+        $display("PASS tb_camera_sobel_top");
         $finish;
     end
 

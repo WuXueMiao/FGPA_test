@@ -4,7 +4,8 @@ module sobel_core ( //输入一个3*3的灰度窗口，2^8的范围0是黑色，
     input  [7:0] p20, p21, p22,
 
     input  [10:0] threshold,  // 可调阈值
-    output reg [7:0] edge_out // 255: 白色边缘；0: 黑色背景
+    output reg [7:0] edge_gray, // 饱和后的梯度幅值灰度图
+    output reg [7:0] edge_out   // 阈值化结果：255 为边缘，0 为背景
 );
 
     // Gx、Gy 可能为负数，因此必须定义为 signed
@@ -40,7 +41,14 @@ module sobel_core ( //输入一个3*3的灰度窗口，2^8的范围0是黑色，
         // 用 |Gx| + |Gy| 近似梯度幅值，避免硬件开方
         magnitude = abs_gx + abs_gy;
 
-        // 二值化输出
+        // 梯度理论范围为 0..2040；转换为显示用 8 位灰度时饱和，
+        // 避免直接截断高位导致强边缘反而变暗。
+        if (magnitude > 12'd255)
+            edge_gray = 8'd255;
+        else
+            edge_gray = magnitude[7:0];
+
+        // 在灰度梯度基础上二值化，供后续阈值显示或识别使用。
         if (magnitude > threshold)
             edge_out = 8'd255; // 白色：检测到边缘
         else

@@ -16,17 +16,19 @@ module camera_sobel_top #(
     // Sobel 阈值
     input      [10:0]       threshold,
 
-    // 边缘检测结果
+    // 灰度像素流，供显示缓存与 Sobel 共用
+    output wire [7:0]        gray_pixel,
+    output wire              pixel_valid,
+    output wire              sof,
+    output wire              eol,
+
+    // 边缘检测结果：灰度梯度图与阈值化黑白图
+    output     [7:0]        edge_gray,
     output     [7:0]        edge_out,
     output                  edge_valid,
     output     [X_WIDTH-1:0] edge_x,
     output     [Y_WIDTH-1:0] edge_y
 );
-
-    wire [7:0] gray_pixel;
-    wire       pixel_valid;
-    wire       sof;
-    wire       eol;
 
     // DVP 的两个 RGB565 字节 → 一个灰度像素
     dvp_rgb565_to_gray u_dvp_rgb565_to_gray (
@@ -58,6 +60,7 @@ module camera_sobel_top #(
 
         .threshold   (threshold),
 
+        .edge_gray   (edge_gray),
         .edge_out    (edge_out),
         .edge_valid  (edge_valid),
         .edge_x      (edge_x),

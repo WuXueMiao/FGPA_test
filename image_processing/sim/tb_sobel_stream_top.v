@@ -11,6 +11,7 @@ module tb_sobel_stream_top;
     reg eol;
     reg [10:0] threshold;
 
+    wire [7:0] edge_gray;
     wire [7:0] edge_out;
     wire edge_valid;
     wire [10:0] edge_x;
@@ -35,6 +36,7 @@ module tb_sobel_stream_top;
 
         .threshold(threshold),
 
+        .edge_gray(edge_gray),
         .edge_out(edge_out),
         .edge_valid(edge_valid),
         .edge_x(edge_x),
@@ -57,6 +59,11 @@ module tb_sobel_stream_top;
             #1;
 
             if (edge_valid) begin
+                if (result_count >= 18 ||
+                    edge_x !== ((result_count % 3) + 1) ||
+                    edge_y !== (((result_count % 9) / 3) + 1) ||
+                    edge_out !== ((result_count < 9 && result_count % 3 < 2) ? 8'd255 : 8'd0))
+                    $fatal(1, "Stream pixel/coordinate mismatch at %0d", result_count);
                 result_count = result_count + 1;
 
                 if (edge_out == 8'd255)
@@ -80,6 +87,7 @@ module tb_sobel_stream_top;
 
             @(posedge clk);
             #1;
+            if (edge_valid !== 1'b0) $fatal(1, "Output valid during input gap");
         end
     endtask
 
@@ -187,6 +195,9 @@ module tb_sobel_stream_top;
         $display("非边缘区域：%0d，预期为 12", nonedge_count);
         $display("--------------------------------");
 
+        if (result_count != 18 || edge_count != 6 || nonedge_count != 12)
+            $fatal(1, "Stream output count mismatch");
+        $display("PASS tb_sobel_stream_top");
         $finish;
     end
 
